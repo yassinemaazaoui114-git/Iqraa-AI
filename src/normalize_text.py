@@ -37,6 +37,14 @@ _REMOVE_CHARS: frozenset[str] = frozenset(
     + [chr(c) for c in range(0x0660, 0x066A)]
     # U+0620 — KFGQPC special letter mark used as a typesetting placeholder
     + [chr(0x0620)]
+    # U+0640 — Arabic tatweel (kashida): decorative letter-stretch, not phonemic
+    + [chr(0x0640)]
+    # U+06DE — Arabic start of rub el-hizb: quarter-juz boundary marker, never recited
+    + [chr(0x06DE)]
+    # U+06E9 — Arabic place of sajdah: prostration marker, never recited
+    + [chr(0x06E9)]
+    # U+200F — Right-to-left mark: zero-width Unicode control character
+    + [chr(0x200F)]
     # U+00A0 — non-breaking space appended before the ayah numeral in KFGQPC values
     + [chr(0x00A0)]
 )

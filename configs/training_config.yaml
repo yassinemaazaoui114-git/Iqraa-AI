@@ -1,0 +1,47 @@
+# Iqraa AI — Training Configuration
+# All hyperparameters for fine-tuning wav2vec2-large-xlsr-53-arabic on Qaloon data.
+# Edit this file to tune training; notebooks read it via OmegaConf or PyYAML.
+
+model:
+  base_model_id: "facebook/wav2vec2-large-xlsr-53-arabic"
+  # Freeze the CNN feature extractor — only transformer layers and CTC head are trained.
+  freeze_feature_extractor: true
+
+data:
+  text_file: "data/text/qalon_canonical.json"
+  audio_dir: "data/audio"
+  processed_dir: "data/processed"
+  sample_rate: 16000          # Hz — required by wav2vec2
+  max_duration_seconds: 30    # Segments longer than this are dropped
+  test_split: 0.1             # 10% held out for evaluation
+
+training:
+  output_dir: "models/qaloon_wav2vec2"
+  num_train_epochs: 30
+  per_device_train_batch_size: 8
+  per_device_eval_batch_size: 8
+  gradient_accumulation_steps: 2
+  learning_rate: 3.0e-4
+  warmup_steps: 500
+  weight_decay: 0.005
+  fp16: true                  # Enable on T4/A10G; set false if using CPU
+  evaluation_strategy: "steps"
+  eval_steps: 400
+  save_steps: 400
+  logging_steps: 100
+  load_best_model_at_end: true
+  metric_for_best_model: "wer"
+  greater_is_better: false    # Lower WER is better
+
+ctc:
+  ctc_loss_reduction: "mean"
+  pad_token_id: 0
+  # Blank token is handled automatically by Wav2Vec2ForCTC
+
+decoder:
+  # Set to true to use pyctcdecode beam-search decoder with a language model.
+  # Requires an n-gram LM built from qalon_canonical.json.
+  use_lm_decoder: false
+  beam_width: 100
+  alpha: 0.5                  # LM weight
+  beta: 1.5                   # Word insertion bonus

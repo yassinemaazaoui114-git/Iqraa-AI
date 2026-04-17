@@ -205,3 +205,10 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Iqraa AI — large data files
+data/audio/
+*.mp3
+*.wav
+*.bin
+*.pt
